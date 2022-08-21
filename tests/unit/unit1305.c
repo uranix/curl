@@ -54,7 +54,7 @@ static CURLcode unit_setup(void)
     return CURLE_OUT_OF_MEMORY;
   }
 
-  Curl_init_dnscache(&hp);
+  Curl_init_dnscache(&hp, CURL_DNSCACHE_HASH_TABLE_SIZE);
   return CURLE_OK;
 }
 
