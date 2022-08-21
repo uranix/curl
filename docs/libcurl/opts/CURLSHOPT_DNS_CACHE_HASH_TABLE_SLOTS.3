@@ -1,0 +1,64 @@
+.\" **************************************************************************
+.\" *                                  _   _ ____  _
+.\" *  Project                     ___| | | |  _ \| |
+.\" *                             / __| | | | |_) | |
+.\" *                            | (__| |_| |  _ <| |___
+.\" *                             \___|\___/|_| \_\_____|
+.\" *
+.\" * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
+.\" *
+.\" * This software is licensed as described in the file COPYING, which
+.\" * you should have received as part of this distribution. The terms
+.\" * are also available at https://curl.se/docs/copyright.html.
+.\" *
+.\" * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+.\" * copies of the Software, and permit persons to whom the Software is
+.\" * furnished to do so, under the terms of the COPYING file.
+.\" *
+.\" * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+.\" * KIND, either express or implied.
+.\" *
+.\" * SPDX-License-Identifier: curl
+.\" *
+.\" **************************************************************************
+.\"
+.TH CURLSHOPT_DNS_CACHE_HASH_TABLE_SLOTS 3 "21 Aug 2022" "libcurl 7.85.0" "curl_multi_setopt options"
+.SH NAME
+CURLSHOPT_DNS_CACHE_HASH_TABLE_SLOTS \- number of slots in the DNS cache hash table
+.SH SYNOPSIS
+.nf
+#include <curl/curl.h>
+
+CURLSHcode curl_multi_setopt(CURLSE *share, CURLSHOPT_DNS_CACHE_HASH_TABLE_SLOTS, long slots);
+.fi
+.SH DESCRIPTION
+Pass a long indicating the \fBslots\fP. The set number will be used as the
+number of slots of the DNS cache hash table. The passed value should be a
+prime number.
+
+The default value is 7. Any negative or zero value is treated as the default.
+
+Increasing the value reduces the cost of DNS cache operations when the number
+of hosts becomes large (>1k) at the cost of increased memory usage.
+
+This option is for the share interface use only, when using the multi interface
+you should instead use the \fICURLMOPT_DNS_CACHE_HASH_TABLE_SLOTS(3)\fP option.
+
+.SH DEFAULT
+7
+.SH PROTOCOLS
+All
+.SH EXAMPLE
+.nf
+CURLSH *m = curl_share_init();
+/* use 1021 slots for DNS cache */
+curl_share_setopt(m, CURLMOPT_DNS_CACHE_HASH_TABLE_SLOTS, 1021L);
+.fi
+.SH AVAILABILITY
+Added in 7.85.0
+.SH RETURN VALUE
+CURLSHE_OK (zero) means that the option was set properly, non-zero means an
+error occurred. See \fIlibcurl-errors(3)\fP for the full list with
+descriptions.
+.SH "SEE ALSO"
+.BR CURLMOPT_DNS_CACHE_HASH_TABLE_SLOTS "(3), "
