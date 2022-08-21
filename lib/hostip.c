@@ -82,10 +82,6 @@
 
 #define MAX_HOSTCACHE_LEN (255 + 7) /* max FQDN + colon + port number + zero */
 
-#ifndef CURL_DNSCACHE_HASH_TABLE_SIZE
-#define CURL_DNSCACHE_HASH_TABLE_SIZE 7
-#endif
-
 /*
  * hostip.c explained
  * ==================
@@ -1009,10 +1005,10 @@ static void freednsentry(void *freethis)
 /*
  * Curl_init_dnscache() inits a new DNS cache.
  */
-void Curl_init_dnscache(struct Curl_hash *hash)
+void Curl_init_dnscache(struct Curl_hash *hash, int slots)
 {
-  Curl_hash_init(hash, CURL_DNSCACHE_HASH_TABLE_SIZE, Curl_hash_str,
-                 Curl_str_key_compare, freednsentry);
+  Curl_hash_init(hash, slots, Curl_hash_str, Curl_str_key_compare,
+                 freednsentry);
 }
 
 /*
