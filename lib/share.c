@@ -41,7 +41,7 @@ curl_share_init(void)
   if(share) {
     share->magic = CURL_GOOD_SHARE;
     share->specifier |= (1<<CURL_LOCK_DATA_SHARE);
-    Curl_init_dnscache(&share->hostcache, CURL_DNSCACHE_HASH_TABLE_SIZE);
+    Curl_init_dnscache(&share->hostcache, CURL_DNS_CACHE_HASH_TABLE_SLOTS);
   }
 
   return share;
@@ -173,11 +173,14 @@ curl_share_setopt(struct Curl_share *share, CURLSHoption option, ...)
     share->clientdata = ptr;
     break;
 
-  case CURLSHOPT_DNS_CACHE_HASH_TABLE_SIZE:
+  case CURLSHOPT_DNS_CACHE_HASH_TABLE_SLOTS:
     {
-      int slots = va_arg(param, int);
+      int dnscache_slots = va_arg(param, int);
+      if (dnscache_slots <= 0) {
+        dnscache_slots = CURL_DNS_CACHE_HASH_TABLE_SLOTS;
+      }
       Curl_hash_destroy(&share->hostcache);
-      Curl_init_dnscache(&share->hostcache, slots);
+      Curl_init_dnscache(&share->hostcache, dnscache_slots);
     }
     break;
 

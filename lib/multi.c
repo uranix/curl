@@ -381,7 +381,7 @@ struct Curl_multi *Curl_multi_handle(int hashsize, /* socket hash */
 
   multi->magic = CURL_MULTI_HANDLE;
 
-  Curl_init_dnscache(&multi->hostcache, CURL_DNSCACHE_HASH_TABLE_SIZE);
+  Curl_init_dnscache(&multi->hostcache, CURL_DNS_CACHE_HASH_TABLE_SLOTS);
 
   sh_init(&multi->sockhash, hashsize);
 
@@ -3229,9 +3229,12 @@ CURLMcode curl_multi_setopt(struct Curl_multi *multi,
       multi->max_concurrent_streams = curlx_sltoui(streams);
     }
     break;
-  case CURLMOPT_DNS_CACHE_HASH_TABLE_SIZE:
+  case CURLMOPT_DNS_CACHE_HASH_TABLE_SLOTS:
     {
       int dnscache_slots = curlx_sltosi(va_arg(param, long));
+      if (dnscache_slots <= 0) {
+        dnscache_slots = CURL_DNS_CACHE_HASH_TABLE_SLOTS;
+      }
       Curl_hash_destroy(&multi->hostcache);
       Curl_init_dnscache(&multi->hostcache, dnscache_slots);
     }
